@@ -19,7 +19,7 @@ eop_mdl    = 0;
 
 %% Setting up training set dimensions
 dim_meas_batch = 20;
-dim_train = 14;
+dim_train = 30e03;
 t_meas = 60*randi([3, 10], [1, dim_train]);
 
 dim_azel = 2;
@@ -63,8 +63,8 @@ hp_min = 300e03;
 hp_max = 1200e03;
 hp = sample_uniform([1, dim_train], hp_max, hp_min);
 % Uniform distribution for eccentricity
-e_min = 0.001;
-e_max = 0.01;
+e_min = 0.005;
+e_max = 0.05;
 e = sample_uniform([1, dim_train], e_max, e_min);
 % Semi-major axis
 a = (hp + R_EARTH)./(1 - e);
@@ -286,19 +286,19 @@ for ii = 1:dim_train
     X = cat(2, X, Xj);
     Y = cat(2, Y, rel_data(ii, 1).true.aroe_osc(:, end));
 end
-save('DNN_IROD_backup_data.mat')
-save('DNN_IROD_train_data.mat', 'X', 'Y')
-save('DNN_IROD_raw_data.mat', 'obsv_data', 'targ_data', 'rel_data')
+% save('DNN_IROD_backup_data.mat')
+% save('DNN_IROD_train_data.mat', 'X', 'Y')
+% save('DNN_IROD_raw_data.mat', 'obsv_data', 'targ_data', 'rel_data')
 
 %%
+% close all
 % for ii = 1:dim_train
 %     figure
-%     plot(rel_data(ii,1).meas.az_el(1,:)./deg2rads, rel_data(ii,1).meas.az_el(2,:)./deg2rads)
-%     hold on
-%     plot(rel_data(ii,1).true.az_el(1,:)./deg2rads, rel_data(ii,1).true.az_el(2,:)./deg2rads)
+%     plot(rel_data(ii,1).meas.az_el(1,:)./deg2rads, rel_data(ii,1).meas.az_el(2,:)./deg2rads, 'k', 'LineWidth', 2)
 %     grid on
-%     hold on
-%     plot(rel_data(ii,1).true.az_el(1,1)./deg2rads, rel_data(ii,1).true.az_el(2,1)./deg2rads, 'Marker', 'o', 'MarkerSize', 4)
-%     drawnow
+%     
+%     xlabel('Azimuth, $$\alpha$$ (deg)', 'FontSize', 20, 'Interpreter', 'Latex')
+%     ylabel('Elevation, $$\epsilon$$ (deg)', 'FontSize', 20, 'Interpreter', 'Latex')
+%     set(gca, 'FontSize', 18, 'TickLabelInterpreter', 'Latex')
 % end
 
