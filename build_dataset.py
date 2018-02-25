@@ -11,14 +11,14 @@ into appropriate proportions for train/dev/test and imported separately.
 A 80/10/10 split is used.  The dimensions currently are:
 
 train: 
-    X is a 241x24000 tensor containing 24K training examples w/ 241 features
-    Y is a 6x24000 tensor containing 24K matching true outputs w/ 6 features
+    X is a 24000x241 tensor containing 24K training examples w/ 241 features
+    Y is a 24000x6 tensor containing 24K matching true labels w/ 6 features
 dev: 
-    X is a 241x3000 tensor containing 3K training examples w/ 241 features
-    Y is a 6x3000 tensor containing 3K matching true outputs w/ 6 features
+    X is a 3000x241 tensor containing 3K training examples w/ 241 features
+    Y is a 3000x6 tensor containing 3K matching true labels w/ 6 features
 test: 
-    X is a 241x3000 tensor containing 3K training examples w/ 241 features
-    Y is a 6x3000 tensor containing 3K matching true outputs w/ 6 features
+    X is a 3000x241 tensor containing 3K training examples w/ 241 features
+    Y is a 3000x6 tensor containing 3K matching true labels w/ 6 features
 """
 
 import argparse
@@ -42,7 +42,7 @@ def convert_and_save(filename, output_dir):
     print("Input filename is " + filename)
     save_name = filename.split(str(os.sep))[-1]
     save_name = save_name.split('.')[0]
-    np.save(os.path.normpath(os.path.join(output_dir, save_name)), data)
+    np.save(os.path.normpath(os.path.join(output_dir, save_name)), data.T)
 
 if __name__ == '__main__':
     args = parser.parse_args()

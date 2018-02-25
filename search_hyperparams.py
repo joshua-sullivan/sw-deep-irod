@@ -10,9 +10,9 @@ from model.utils import Params
 
 PYTHON = sys.executable
 parser = argparse.ArgumentParser()
-parser.add_argument('--parent_dir', default='experiments/learning_rate',
+parser.add_argument('--parent_dir', default=os.path.join('experiments','learning_rate'),
                     help="Directory containing params.json")
-parser.add_argument('--data_dir', default='data/64x64_SIGNS',
+parser.add_argument('--data_dir', default=os.path.join('datasets','tensor'),
                     help="Directory containing the dataset")
 
 
