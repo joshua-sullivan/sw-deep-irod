@@ -36,6 +36,7 @@ def convert_and_save(filename, output_dir):
     mat_contents = sio.loadmat(filename)
     if 'X' in mat_contents:
         data = mat_contents['X']
+        data = data[:-1, :]
     if 'Y' in mat_contents:
         data = mat_contents['Y']
 

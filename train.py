@@ -5,6 +5,7 @@ import logging
 import os
 import random
 
+import numpy as np
 import tensorflow as tf
 
 from model.input_fn import input_fn

@@ -1,3 +1,11 @@
 datasets/
 model/__pycache__
 *.asv
+backup/
+experiments/base_model/best_weights/
+experiments/base_model/eval_summaries/
+experiments/base_model/last_weights/
+experiments/base_model/metrics_eval_best_weights.json
+experiments/base_model/metrics_eval_last_weights.json
+experiments/base_model/train.log
+experiments/base_model/train_summaries/

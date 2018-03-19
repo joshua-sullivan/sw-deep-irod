@@ -95,7 +95,11 @@ def train_and_evaluate(train_model_spec, eval_model_spec, model_dir, params, res
             train_sess(sess, train_model_spec, num_steps, train_writer, params)
 
             # Save weights
-            last_save_path = os.path.join(model_dir, 'last_weights', 'after-epoch')
+            last_save_path = os.path.normpath(os.path.join(model_dir, 'last_weights', 'after-epoch'))
+            # print("Last Save Path")
+            # print(last_save_path)
+            # if not os.path.exists(last_save_path):
+            #     os.mkdir(last_save_path)
             last_saver.save(sess, last_save_path, global_step=epoch + 1)
 
             # Evaluate for one epoch on validation set

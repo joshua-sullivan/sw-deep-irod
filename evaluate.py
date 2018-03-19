@@ -4,6 +4,8 @@ import argparse
 import logging
 import numpy as np
 import os
+
+import numpy as np
 import tensorflow as tf 
 
 from model.input_fn import input_fn
