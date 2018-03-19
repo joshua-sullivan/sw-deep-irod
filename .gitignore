@@ -1,3 +1,4 @@
+datasets/
 model/__pycache__
 *.asv
 backup/
