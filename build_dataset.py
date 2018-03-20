@@ -31,14 +31,27 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--data_dir', default=os.path.join('datasets','matlab'), help="Directory with IROD dataset .mat files")
 parser.add_argument('--output_dir', default=os.path.join('datasets','tensor'), help="Directory with IROD dataset Numpy tensors")
 
-def convert_and_save(filename, output_dir):
+def convert_and_save(filename, output_dir, is_train_data):
     """ Converts from MATLAB .mat file to NumPy array """
     mat_contents = sio.loadmat(filename)
     if 'X' in mat_contents:
         data = mat_contents['X']
         data = data[:-1, :]
+        if is_train_data:
+            # data = data[:, :5000]
+            # Finding the normalization statistics from the train data
+            global mu, sig2 
+            mu = np.sum(data, axis=1) / data.shape[1]
+            sig2 = np.sum(data**2, axis=1) / data.shape[1]  
+        # Normalizing feature data
+        data -= mu.reshape((data.shape[0], 1))
+        data /= sig2.reshape((data.shape[0], 1))
+
     if 'Y' in mat_contents:
         data = mat_contents['Y']
+        if is_train_data:
+            # data = data[:, :5000]
+            None
 
     print("Input filename is " + filename)
     save_name = filename.split(str(os.sep))[-1]
@@ -68,17 +81,19 @@ if __name__ == '__main__':
     if not os.path.exists(args.output_dir):
         os.mkdir(args.output_dir)
     else:
-        print("Warning: output dir {} already exists".format(os.path.normpath(args.output_dir)))
+        # print("Warning: output dir {} already exists".format(os.path.normpath(args.output_dir)))
+        None
 
     for split in ['train', 'dev', 'test']:
         output_dir_split = os.path.normpath(os.path.join(args.output_dir, '{}'.format(split)))
         if not os.path.exists(output_dir_split):
             os.mkdir(output_dir_split)
         else:
-            print("Warning: dir {} already exists".format(output_dir_split))
+            # print("Warning: dir {} already exists".format(output_dir_split))
+            None
 
         print("Processing {} data, saving preprocessed data to {}".format(split, output_dir_split))
         for filename in tqdm(filenames[split]):
-            convert_and_save(filename, output_dir_split)
+            convert_and_save(filename, output_dir_split, (split == 'train'))
 
     print("Done building dataset")

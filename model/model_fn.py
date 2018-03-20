@@ -78,10 +78,16 @@ def build_model(mode, inputs, params):
 
     if params.model_version == 'lstm':
 
-        lstm_cell = tf.nn.rnn_cell.BasicLSTMCell(params.lstm_num_units)
-        output, _ = tf.nn.dynamic_rnn(lstm_cell, feature, dtype=tf.float64)
-
+        # Multi-layer LSTM-based RNN
+        rnn_layers = [tf.nn.rnn_cell.LSTMCell(size) for size in params.lstm_num_units]
+        multi_rnn_cell = tf.nn.rnn_cell.MultiRNNCell(rnn_layers)
+        output, _ = tf.nn.dynamic_rnn(cell=multi_rnn_cell, inputs=feature, dtype=tf.float64)
         predictions = tf.layers.dense(output, params.output_length)
+
+        # # Single-layer LSTM-based RNN
+        # lstm_cell = tf.nn.rnn_cell.BasicLSTMCell(params.lstm_num_units)
+        # output, _ = tf.nn.dynamic_rnn(lstm_cell, feature, dtype=tf.float64)
+        # predictions = tf.layers.dense(output, params.output_length)
 
     else:
         raise NotImplementedError("Unknown model version: {}".format(params.model_version))
@@ -111,8 +117,9 @@ def model_fn(mode, inputs, params, reuse=False):
         predictions = build_model(is_training, inputs, params)
 
     # Define loss and accuracy
-    # loss = tf.losses.huber_loss(labels=labels, predictions=predictions, weights=1.0, delta=1.0)
-    loss = tf.losses.mean_squared_error(labels=labels, predictions=predictions[:, 19, :]) / 1000000.
+    # loss = tf.losses.huber_loss(labels=labels, predictions=predictions[:, 19, :], weights=1.0, delta=5000.)
+    # loss = tf.losses.mean_squared_error(labels=labels, predictions=predictions[:, 19, :], weights=1.0e-06) 
+    loss = tf.losses.absolute_difference(labels=labels, predictions=predictions[:, 19, :], weights=1.0e-03)
 
     # res = labels - predictions
     # labels_mean = tf.reduce_mean(labels)
@@ -121,7 +128,8 @@ def model_fn(mode, inputs, params, reuse=False):
     # SSres = tf.reduce_sum(tf.squared_difference(labels, predictions))
     # R2 = 1 - (SSres/SStot)
 
-    accuracy = tf.reduce_mean(tf.squared_difference(predictions[:, 19, :], labels))
+    # accuracy = tf.reduce_mean(tf.squared_difference(predictions[:, 19, :], labels))
+    accuracy = tf.losses.absolute_difference(labels=labels, predictions=predictions[:, 19, :], weights=1.0e-03) 
     # accuracy = R2
 
     # Define training step that minimizes the loss with the Adam optimizer
@@ -141,8 +149,9 @@ def model_fn(mode, inputs, params, reuse=False):
     # Metrics for evaluation using tf.metrics (average over whole dataset)
     with tf.variable_scope("metrics"):
         metrics = {
-            'accuracy': tf.metrics.mean_squared_error(labels=labels, 
-                                                      predictions=predictions[:, 19, :]),
+            # 'accuracy': tf.metrics.mean_squared_error(labels=labels, 
+            #                                           predictions=predictions[:, 19, :], weights=1.0e-03),
+            'accuracy': tf.metrics.mean(accuracy),
             'loss': tf.metrics.mean(loss)
         }
 

@@ -18,19 +18,7 @@ def input_fn(features_in, labels_in, params):
 
     num_examples = features.shape[0]
 
-    for row_idx in range(num_examples):
-        row_mean = np.mean(features[row_idx, :])
-        row_var = np.var(features[row_idx, :])
-        features[row_idx, :] = (features[row_idx, :] - row_mean) / row_var
-
     features = features.reshape(num_examples, 20, 12)
-
-    # Standardizing the input feature data
-    for row_idx in range(num_examples):
-        mean_val = np.mean(features[row_idx, :])
-        var_val = np.var(features[row_idx, :])
-
-        features[row_idx, :] = (features[row_idx, :] - mean_val) / var_val
 
     assert features.shape[0] == labels.shape[0], "Feature tensor and output tensor should have same number of examples."
 
