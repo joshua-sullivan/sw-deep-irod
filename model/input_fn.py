@@ -18,7 +18,7 @@ def input_fn(features_in, labels_in, params):
 
     num_examples = features.shape[0]
 
-    features = features.reshape(num_examples, 20, 12)
+    features = features.reshape(num_examples, params.num_meas, 12)
 
     assert features.shape[0] == labels.shape[0], "Feature tensor and output tensor should have same number of examples."
 

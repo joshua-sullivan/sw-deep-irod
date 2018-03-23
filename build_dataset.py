@@ -36,7 +36,7 @@ def convert_and_save(filename, output_dir, is_train_data):
     mat_contents = sio.loadmat(filename)
     if 'X' in mat_contents:
         data = mat_contents['X']
-        data = data[:-1, :]
+        # data = data[:-1, :]
         if is_train_data:
             # data = data[:, :5000]
             # Finding the normalization statistics from the train data

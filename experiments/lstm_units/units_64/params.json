@@ -1,8 +1,8 @@
 {
     "model_version": "lstm",
-    "lstm_num_units": [128, 128, 128, 128, 128],
+    "lstm_num_units": [64, 64, 64, 64, 64],
 
-    "learning_rate": 1e-02,
+    "learning_rate": 1e-01,
     "batch_size": 16,
     "num_epochs": 500,
     "dropout_rate": 0.3,
